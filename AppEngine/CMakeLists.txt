@@ -23,7 +23,7 @@ set(phdrs ${root}/imgui.h)
 set(hdrs ${root}/imstb_rectpack.h ${root}/imstb_textedit.h ${root}/imstb_truetype.h
         ${root}/imgui_internal.h)
 set(srcs ${root}/imgui.cpp
-        ${root}/imgui_demo.cpp ${root}/imgui_draw.cpp ${root}/imgui_widgets.cpp ../AppDemo/app_demo.cpp)
+        ${root}/imgui_demo.cpp ${root}/imgui_draw.cpp ${root}/imgui_widgets.cpp ${root}/imgui_tables.cpp)
 
 add_library(imgui STATIC ${phdrs} ${hdrs} ${srcs})
 target_include_directories(imgui PUBLIC
@@ -32,17 +32,17 @@ target_include_directories(imgui PUBLIC
 target_compile_definitions(imgui PUBLIC IMGUI_DISABLE_INCLUDE_IMCONFIG_H)
 
 if(FEATURE_DirectX)
-    add_library(app_engine STATIC app.cpp ${root}/examples/imgui_impl_win32.cpp ${root}/examples/imgui_impl_dx11.cpp)
-    target_include_directories(app_engine PUBLIC ${root}/examples)
+    add_library(app_engine STATIC app.cpp ${root}/backends/imgui_impl_win32.cpp ${root}/backends/imgui_impl_dx11.cpp)
+    target_include_directories(app_engine PUBLIC ${root}/backends)
     target_link_libraries(app_engine imgui d3d11 dxguid)
 
 #    Just don't do DLLs - global data gets obnoxious
 #    include(GenerateExportHeader)
 #    generate_export_header(app_engine)
 else()
-    add_library(app_engine STATIC app.cpp ${root}/examples/imgui_impl_glfw.cpp ${root}/examples/imgui_impl_opengl3.cpp)
+    add_library(app_engine STATIC app.cpp ${root}/backends/imgui_impl_glfw.cpp ${root}/backends/imgui_impl_opengl3.cpp)
     target_compile_definitions(app_engine PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLEW)
-    target_include_directories(app_engine PUBLIC ${root}/examples)
+    target_include_directories(app_engine PUBLIC ${root}/backends)
     target_link_libraries(app_engine imgui ${SOIL_LIBRARY} ${GLFW_LIBRARIES} ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES})
 endif()
 
